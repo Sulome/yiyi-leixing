@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF9F6">
+<title>依恋类型测试｜为什么你总在等一句回复</title>
+<meta name="description" content="20 道题，测出你怕被抛下几分、怕被靠近几分，还有你最容易栽的那一步。这是自我觉察，不是心理诊断。">
+<style>
+  :root{
+    --paper:#FBF9F6;
+    --paper-2:#FFFFFF;
+    --ink:#1F2428;
+    --ink-2:#5A6469;
+    --ink-3:#939CA1;
+    --accent:#3E5C6B;
+    --accent-soft:#E8EEF1;
+    --line:#E3DED7;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    overflow-x:hidden;
+  }
+  .wrap{
+    width:100%;
+    max-width:560px;
+    margin:0 auto;
+    padding:24px 22px calc(24px + env(safe-area-inset-bottom));
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+  }
+  .screen{display:none;flex:1 1 auto;flex-direction:column}
+  .screen.on{display:flex}
+
+  /* ---------- 封面 ---------- */
+  .cover{justify-content:center}
+  .kicker{font-size:12px;letter-spacing:.2em;color:var(--ink-3);margin:0 0 20px;font-weight:600}
+  .cover h1{margin:0 0 22px;font-size:clamp(32px,10vw,44px);line-height:1.18;font-weight:800;letter-spacing:-.01em}
+  .cover h1 span{display:block}
+  .cover h1 .accent{color:var(--accent)}
+  .sub{margin:0 0 10px;font-size:17px;color:var(--ink-2);line-height:1.55}
+  .meta{margin:0 0 34px;font-size:13px;color:var(--ink-3);letter-spacing:.02em}
+  .btn{
+    display:block;width:100%;border:0;cursor:pointer;
+    padding:18px 20px;font-size:17px;font-weight:700;letter-spacing:.02em;
+    border-radius:var(--radius);
+    background:var(--accent);color:#fff;
+    font-family:inherit;
+    transition:transform .12s ease, opacity .12s ease;
+  }
+  .btn:active{transform:scale(.985);opacity:.92}
+  .btn-hint{text-align:center;font-size:13px;color:var(--ink-3);margin:14px 0 0;line-height:1.6}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+
+  /* ---------- 做题 ---------- */
+  .quiz{justify-content:flex-start}
+  .progress{position:relative;height:3px;background:var(--line);border-radius:99px;overflow:hidden;margin:0 0 26px;flex:0 0 auto}
+  .progress i{position:absolute;inset:0 auto 0 0;width:0;background:var(--accent);border-radius:99px;transition:width .3s cubic-bezier(.4,0,.2,1)}
+  .qcount{font-size:12px;letter-spacing:.14em;color:var(--ink-3);margin:0 0 14px;font-weight:600;font-variant-numeric:tabular-nums}
+  .qtext{font-size:clamp(20px,5.6vw,24px);line-height:1.45;font-weight:700;margin:0 0 24px;letter-spacing:-.005em}
+  .opts{display:flex;flex-direction:column;gap:9px;margin:0 0 4px}
+  .opt{
+    display:block;width:100%;text-align:left;cursor:pointer;
+    background:var(--paper-2);border:1px solid var(--line);
+    color:var(--ink);font-family:inherit;
+    font-size:16px;line-height:1.45;
+    padding:14px 15px;border-radius:var(--radius);
+    transition:border-color .14s ease, background .14s ease, transform .1s ease;
+  }
+  .opt:active{transform:scale(.994);background:var(--accent-soft);border-color:var(--accent)}
+  .opt.chosen{background:var(--accent-soft);border-color:var(--accent)}
+
+  /* ---------- 结果 ---------- */
+  .result{justify-content:flex-start;padding-top:4px}
+  .rlabel{font-size:12px;letter-spacing:.2em;color:var(--ink-3);font-weight:600;margin:0 0 16px}
+
+  .quadwrap{display:flex;flex-direction:column;align-items:center;margin:0 0 22px}
+  .quad-ytitle{font-size:11px;color:var(--ink-3);letter-spacing:.08em;margin:0 0 6px;align-self:flex-start;padding-left:2px}
+  .quad{display:block}
+  .quad-xtitle{font-size:11px;color:var(--ink-3);letter-spacing:.08em;margin:6px 0 0;align-self:flex-end;padding-right:2px}
+
+  .pairs{display:flex;gap:10px;margin:0 0 18px}
+  .pair{flex:1 1 0;min-width:0}
+  .pair .plabel{font-size:12px;color:var(--ink-3);margin:0 0 2px;letter-spacing:.04em}
+  .pair .pnum{font-size:clamp(36px,10vw,40px);line-height:1;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .pair .pnum i{font-size:14px;font-weight:600;color:var(--ink-3);font-style:normal;margin-left:2px}
+
+  .bandline{font-size:17px;color:var(--accent);font-weight:700;margin:0 0 10px;line-height:1.5}
+  .typename{font-size:clamp(44px,13.5vw,54px);line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:0 0 12px;color:var(--ink)}
+  .typetag{font-size:16px;color:var(--ink-2);margin:0 0 26px;line-height:1.6}
+
+  .sec{margin:0 0 26px}
+  .sec h3{font-size:13px;letter-spacing:.14em;color:var(--ink-3);font-weight:700;margin:0 0 12px}
+  .grow{font-size:15px;line-height:1.8;color:var(--ink-2);margin:0}
+
+  .trap{background:var(--accent-soft);border-radius:var(--radius);padding:18px 17px;margin:0 0 24px}
+  .trap h3{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin:0 0 10px}
+  .trap p{font-size:15px;line-height:1.8;margin:0;color:var(--ink)}
+
+  .week{list-style:none;padding:0;margin:0 0 24px}
+  .week li{font-size:15px;line-height:1.8;color:var(--ink-2);padding-left:14px;position:relative}
+  .week li::before{content:"";position:absolute;left:0;top:.66em;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.55}
+
+  .types4{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:8px}
+  .types4 li{font-size:14px;line-height:1.65;color:var(--ink-2)}
+  .types4 li b{color:var(--ink);font-weight:700}
+
+  .note{font-size:13px;line-height:1.75;color:var(--ink-2);margin:0 0 12px;padding-left:12px;border-left:2px solid var(--line)}
+  .note:last-of-type{margin-bottom:22px}
+
+  .actions{display:flex;flex-direction:column;gap:10px;margin:0 0 20px}
+  .foot{font-size:12px;color:var(--ink-3);line-height:1.75;border-top:1px solid var(--line);padding-top:14px;margin:auto 0 0}
+  .foot p{margin:0}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 封面 -->
+  <section class="screen cover on" id="screen-cover">
+    <p class="kicker">依恋类型 · 关系默认设置</p>
+    <h1><span>为什么你</span><span class="accent">总在等一句回复</span></h1>
+    <p class="sub">不是他不够爱你，是你的设置在报警</p>
+    <p class="meta">20 道题 · 约 2 分钟 · 不给诊断，不劝分合</p>
+    <button class="btn" id="btn-start" type="button">开始测试</button>
+    <p class="btn-hint">测完给你两个分数，还有你最容易栽的那一步</p>
+  </section>
+
+  <!-- 做题 -->
+  <section class="screen quiz" id="screen-quiz">
+    <div class="progress"><i id="bar"></i></div>
+    <p class="qcount" id="qcount">第 1 / 20 题</p>
+    <h2 class="qtext" id="qtext"></h2>
+    <div class="opts" id="opts"></div>
+  </section>
+
+  <!-- 结果 -->
+  <section class="screen result" id="screen-result">
+    <p class="rlabel">你在一段关系里的默认设置</p>
+
+    <div class="quadwrap">
+      <p class="quad-ytitle">怕被抛下 ↑</p>
+      <svg class="quad" id="quad" viewBox="0 0 220 220" width="220" height="220" role="img" aria-label="两条轴围成的四象限小图，当前类型那一格有一个点"></svg>
+      <p class="quad-xtitle">怕被靠近 →</p>
+    </div>
+
+    <div class="pairs">
+      <div class="pair">
+        <p class="plabel">怕被抛下</p>
+        <p class="pnum"><span id="anx-num">0</span><i>分</i></p>
+      </div>
+      <div class="pair">
+        <p class="plabel">怕被靠近</p>
+        <p class="pnum"><span id="avd-num">0</span><i>分</i></p>
+      </div>
+    </div>
+
+    <p class="bandline" id="bandline"></p>
+    <h1 class="typename" id="typename"></h1>
+    <p class="typetag" id="typetag"></p>
+
+    <div class="sec hidden" id="growsec">
+      <h3>你在关系里是这样的</h3>
+      <p class="grow" id="grow"></p>
+    </div>
+
+    <div class="trap hidden" id="trapbox">
+      <h3>最容易栽的一步</h3>
+      <p id="trap"></p>
+    </div>
+
+    <div class="sec hidden" id="weeksec">
+      <h3>本周能做的一件</h3>
+      <ul class="week" id="week"></ul>
+    </div>
+
+    <div class="sec hidden" id="swingsec">
+      <h3>四种，你可以都看看</h3>
+      <ul class="types4" id="types4"></ul>
+      <p class="grow" id="swingclose"></p>
+    </div>
+
+    <p class="note hidden" id="mid-anx"></p>
+    <p class="note hidden" id="mid-avd"></p>
+
+    <div class="actions">
+      <button class="btn" id="btn-copy" type="button">复制我的结果</button>
+      <button class="btn ghost" id="btn-again" type="button">再测一次</button>
+    </div>
+
+    <p class="note hidden" id="fast"></p>
+
+    <div class="foot">
+      <p>这是自我觉察，不是心理诊断。</p>
+      <p>如果这段关系让你长期睡不好、吃不下，请找专业的人聊聊。</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var AXES = ['ANX','AVD'];
+  var TYPES = ['SECURE','ANXIOUS','AVOIDANT','FEARFUL'];
+  var TYPE_CN = { SECURE:'安全型', ANXIOUS:'焦虑型', AVOIDANT:'回避型', FEARFUL:'混乱型' };
+
+  // 题目严格照设计稿 ④ 顺序：Q1 焦虑、Q2 回避……交替到底。
+  // 选项顺序 0→4 递进，不打散（量表题）。分值不在页面上显示。
+  var QUESTIONS = [
+    { axis:'ANX', text:'对方三个小时没回消息', options:[
+      { t:'我没注意，忙完才看到', v:0 },
+      { t:'会看一眼，但该干嘛干嘛', v:1 },
+      { t:'会想一下他是不是在忙，然后继续做事', v:2 },
+      { t:'会反复看手机，想发一句「在吗」', v:3 },
+      { t:'开始回想最近哪句话说错了，坐不住', v:4 }
+    ]},
+    { axis:'AVD', text:'对方开始每天问你今天去哪了、几点回', options:[
+      { t:'挺正常的，说一声就行', v:0 },
+      { t:'会说，但偶尔觉得有点多', v:1 },
+      { t:'会觉得有点被盯着，开始少说几句', v:2 },
+      { t:'会觉得闷，想找个理由自己待一会儿', v:3 },
+      { t:'会觉得透不过气，想拉开距离', v:4 }
+    ]},
+    { axis:'ANX', text:'对方回消息突然变短了，就一个「嗯」', options:[
+      { t:'没感觉，他可能就是忙', v:0 },
+      { t:'会留意一下，但不会往心里去', v:1 },
+      { t:'会想他今天是不是不太高兴', v:2 },
+      { t:'会多看两遍，想找一句话把话头接回来', v:3 },
+      { t:'会立刻想是不是我哪里惹到他了', v:4 }
+    ]},
+    { axis:'AVD', text:'对方说「我们聊聊我们俩的关系」', options:[
+      { t:'好啊，我也想聊', v:0 },
+      { t:'会问一句聊什么，然后聊', v:1 },
+      { t:'会觉得有点压力，但还能坐下来', v:2 },
+      { t:'会想躲，先把话题岔开', v:3 },
+      { t:'会心里一紧，觉得要出事', v:4 }
+    ]},
+    { axis:'ANX', text:'吵架之后，对方没有先来找你', options:[
+      { t:'那就各自冷静，该睡睡', v:0 },
+      { t:'会等一等，他来了就说，不来也不追', v:1 },
+      { t:'会有点不安，但能忍住', v:2 },
+      { t:'会不停看手机，删了又打的字改好几遍', v:3 },
+      { t:'会先低头，哪怕不是我的错，我怕就这样了', v:4 }
+    ]},
+    { axis:'AVD', text:'对方在你面前哭了，要你安慰', options:[
+      { t:'会抱住他，陪他把话说完', v:0 },
+      { t:'会递纸巾，问他要不要说说', v:1 },
+      { t:'会有点手足无措，但还是陪着', v:2 },
+      { t:'会想快点让他好起来，好结束这个场面', v:3 },
+      { t:'会想找借口走开，我不知道怎么处理', v:4 }
+    ]},
+    { axis:'ANX', text:'你生病了，对方只说了句「多喝热水」', options:[
+      { t:'那也没办法，他自己也忙', v:0 },
+      { t:'有点失望，但说明天见就好', v:1 },
+      { t:'会想他是不是没那么在意我', v:2 },
+      { t:'会故意不说自己难受，看他会不会问', v:3 },
+      { t:'会直接说「你是不是根本不在乎我」', v:4 }
+    ]},
+    { axis:'AVD', text:'对方提要长期规划，比如以后住哪、要不要一起养只猫', options:[
+      { t:'会认真一起想', v:0 },
+      { t:'会说好啊，但先不细想', v:1 },
+      { t:'会觉得有点早，往回收一点', v:2 },
+      { t:'会含糊过去，或者开个玩笑岔开', v:3 },
+      { t:'会觉得被推着走，想先停一下', v:4 }
+    ]},
+    { axis:'ANX', text:'看到对方和别人的合照，笑得很开心', options:[
+      { t:'挺好的，他朋友多', v:0 },
+      { t:'会问一句这是谁，然后就算了', v:1 },
+      { t:'会多看两眼，心里有点不舒服', v:2 },
+      { t:'会翻一翻这个人的主页', v:3 },
+      { t:'会一整晚想这件事，忍不住去问', v:4 }
+    ]},
+    { axis:'AVD', text:'你情绪低落，对方说要过来陪你', options:[
+      { t:'好啊，你来', v:0 },
+      { t:'会说不用，但他坚持也就算了', v:1 },
+      { t:'会说不用，我自己待会儿就好', v:2 },
+      { t:'会觉得他来了我反而更难受', v:3 },
+      { t:'会直接拒绝，然后关上门自己待着', v:4 }
+    ]},
+    { axis:'ANX', text:'对方夸了另一个人，说你看看人家', options:[
+      { t:'我会顺着夸两句，确实厉害', v:0 },
+      { t:'有点不服，但嘴上不说', v:1 },
+      { t:'会想他是不是觉得我不够好', v:2 },
+      { t:'会把这句话记住，过几天还想起', v:3 },
+      { t:'会当场冷下来，或者回一句扎他的话', v:4 }
+    ]},
+    { axis:'AVD', text:'对方连发好几条，说想你、问你在干嘛', options:[
+      { t:'会一条条回，聊得挺开心', v:0 },
+      { t:'会回，但不会每条都接', v:1 },
+      { t:'会简单回两句，然后说在忙', v:2 },
+      { t:'会觉得有点密，想放一放再回', v:3 },
+      { t:'会觉得被追着，索性晚点再说', v:4 }
+    ]},
+    { axis:'ANX', text:'对方临时取消了今晚的约会', options:[
+      { t:'行，那我正好歇一晚', v:0 },
+      { t:'会问一句什么事，然后约下次', v:1 },
+      { t:'会说没事，但心里有点空', v:2 },
+      { t:'会想他是不是不想见我，只是找了个理由', v:3 },
+      { t:'会追问到底什么事，他越含糊我越要问', v:4 }
+    ]},
+    { axis:'AVD', text:'对方记得你所有的小事，天天提起来', options:[
+      { t:'会觉得被放在心上，很暖', v:0 },
+      { t:'会觉得挺甜的，偶尔有点不好意思', v:1 },
+      { t:'会觉得有点刻意，不知道该接什么', v:2 },
+      { t:'会觉得有点压力，好像要还回去', v:3 },
+      { t:'会觉得被盯着，想淡一点', v:4 }
+    ]},
+    { axis:'ANX', text:'你说了一件很重要的事，对方回得很敷衍', options:[
+      { t:'那下次不说了', v:0 },
+      { t:'会有点失落，但也不强求', v:1 },
+      { t:'会再说一遍，看他听不听', v:2 },
+      { t:'会觉得他根本没在听我说话', v:3 },
+      { t:'会当场停下来，或者赌气不说话等他自己发现', v:4 }
+    ]},
+    { axis:'AVD', text:'对方说要见你的朋友和家人', options:[
+      { t:'好啊，正好介绍', v:0 },
+      { t:'会说再等等，找个合适的时候', v:1 },
+      { t:'会觉得有点快，想先推一推', v:2 },
+      { t:'会觉得两件事混在一起了，有点乱', v:3 },
+      { t:'会觉得被绑住了，想先退一步', v:4 }
+    ]},
+    { axis:'ANX', text:'对方最近开始忙，见面的间隔变长了', options:[
+      { t:'正常，人都有忙的时候', v:0 },
+      { t:'会问一句忙到什么时候，然后自己安排', v:1 },
+      { t:'会有点不习惯，但能调整', v:2 },
+      { t:'会开始算上次见面是几天前', v:3 },
+      { t:'会觉得他在往后退，忍不住要去确认', v:4 }
+    ]},
+    { axis:'AVD', text:'你发现自己开始依赖对方了，比如每天都要跟他说几句', options:[
+      { t:'挺好啊，这就是关系', v:0 },
+      { t:'会开心，但也不会非要不可', v:1 },
+      { t:'会有点警觉，提醒自己别太靠', v:2 },
+      { t:'会开始故意少说一点，看自己还行不行', v:3 },
+      { t:'会想抽身，怕以后收不回来', v:4 }
+    ]},
+    { axis:'ANX', text:'对方说「我今晚想自己待着」', options:[
+      { t:'「行，早点休息」', v:0 },
+      { t:'会问一句是不是累了', v:1 },
+      { t:'会说好，但心里有点空', v:2 },
+      { t:'会想是不是我做错了什么', v:3 },
+      { t:'会追问「是不是我哪里不好」，或者干脆不理他', v:4 }
+    ]},
+    { axis:'AVD', text:'对方说「有事就跟我说，别自己扛」', options:[
+      { t:'会说好，然后真的会说', v:0 },
+      { t:'会说好，偶尔会说一两件', v:1 },
+      { t:'会说好，但真有事还是自己处理', v:2 },
+      { t:'会觉得说了也没用，或者不想欠人', v:3 },
+      { t:'会觉得这是句客套话，我不信', v:4 }
+    ]}
+  ];
+
+  var TOTAL_Q = QUESTIONS.length;
+
+  // 5.3 强度四档（从上往下判断，命中即停）
+  var BANDS = [
+    { min:75, max:100, name:'非常典型', line:'这套反应基本就是你的默认设置' },
+    { min:50, max:74,  name:'比较典型', line:'这套反应在你身上挺稳的' },
+    { min:25, max:49,  name:'有点倾向', line:'大致是这样，但没那么绝对' },
+    { min:0,  max:24,  name:'界线很模糊', line:'你这两种反应都不算明显，会看人、看情况' }
+  ];
+
+  // 6.2 四个类型的结果内容（照抄设计稿）
+  var CONTENT = {
+    SECURE: {
+      tag:'你不是不粘，是不用靠粘来确认',
+      grow:'对方冷一点，你会想一下，但不会立刻报警；你需要人的时候能开口，不需要的时候一个人也不难受。你不是天生淡定，是你心里大概有个底——就算这段黄了，你也还是你。',
+      trap:'把对方的稳定当成理所当然。你不太追问，所以对方的信号你收得慢。等你听到「你从来不管我」，往往已经攒了很久。',
+      week:'主动问一次「你最近有什么没跟我说的」。不用等对方先开口，也不用等出问题再问。'
+    },
+    ANXIOUS: {
+      tag:'不是太作，是你的警报器太灵敏',
+      grow:'消息回慢了你会想很多，对方情绪一变你立刻能感觉到。你的强项是你很会照顾人的感受，弱项是你把「确认」当成了安全感——确认一次只够撑一会儿，过两天又要重新确认。',
+      trap:'用「你是不是不爱我了」去测试对方。你想听的是「没有啊我爱你」，但你问的方式会让对方觉得被审判。一次两次还行，二十次就会把人推远。你越怕被丢下，越容易做出让人想跑的动作——这是这个类型最不公平的地方。',
+      week:'下次想发「在吗」的时候，先写下你真正想说的那句（比如「我今天有点低落，想跟你说两句话」），发这一句，不发「在吗」。'
+    },
+    AVOIDANT: {
+      tag:'不是不在乎，是你先撤为敬',
+      grow:'你很少主动找人，别人靠太近你会有点闷。你不是没感情，你是习惯了先把自己的情绪处理完再出现，结果对方只看到你处理完了的样子，觉得你什么都用不着他。',
+      trap:'在对方最需要你的时候消失，然后说「我需要冷静一下」。你以为只是缓一缓，对方收到的是「在我最难的时候他不在这儿」。',
+      week:'下次想撤的时候，先说一句「我现在脑子有点乱，我晚上八点回来跟你说」。给一个时间，比直接消失伤害小十倍。'
+    },
+    FEARFUL: {
+      tag:'不是你有问题，是你在两件事之间来回',
+      grow:'你很想要一段稳的关系，但真稳下来你又不放心。对方热情的时候你会想「他是不是对谁都这样」，对方冷一点你又慌了。你不是在演，这两种反应都是真的。',
+      trap:'反复拉扯。你会先推开对方，看对方会不会走；走了你又难受。这个类型对关系伤害最大的地方不是吵架，是对方慢慢学会了不信你说的话——你说「我们分开吧」，他不知道该不该当真。',
+      week:'下次想推开的那个瞬间，先别动，把当时脑子里那句话写下来（比如「他迟早会走」）。写完你会发现那是个判断，不是一个事实。'
+    }
+  };
+
+  // 6.3 摇摆区
+  var SWING = {
+    name:'摇摆区',
+    tag:'你没有被固定在一套剧本里',
+    body:'你的两条线都在中间——不特别怕被抛下，也不特别怕被靠近。这不代表你没有感情，代表你的反应很看人、看情况：对的人你可能是安全型，不对的人你可能是回避型。',
+    close:'想看得更清楚，可以想想你在上一段关系里更接近哪一种——那个答案可能比这个测试准。'
+  };
+
+  /* ---------------- 计分（对外暴露给自测） ---------------- */
+  function scoreOf(answers){
+    var score = { ANX:0, AVD:0 };
+    for (var i = 0; i < TOTAL_Q; i++){
+      var picked = answers[i];
+      if (picked === undefined || picked === null) continue;
+      score[QUESTIONS[i].axis] += QUESTIONS[i].options[picked].v;
+    }
+    return { score:score, anx: Math.round(score.ANX / 40 * 100), avd: Math.round(score.AVD / 40 * 100) };
+  }
+
+  // 5.6 答得太快：出现最多的选项位置，次数 >= 16
+  function maxSamePos(answers){
+    var pos = { 1:0, 2:0, 3:0, 4:0, 5:0 };
+    for (var i = 0; i < TOTAL_Q; i++){
+      var picked = answers[i];
+      if (picked === undefined || picked === null) continue;
+      pos[picked + 1] += 1;
+    }
+    var max = 0;
+    for (var k = 1; k <= 5; k++) if (pos[k] > max) max = pos[k];
+    return max;
+  }
+
+  function bandOf(strength){
+    for (var i = 0; i < BANDS.length; i++){
+      if (strength >= BANDS[i].min && strength <= BANDS[i].max) return BANDS[i];
+    }
+    return BANDS[BANDS.length - 1];
+  }
+
+  function judge(answers){
+    var r = scoreOf(answers);
+    var anx = r.anx, avd = r.avd;
+    var anxHigh = anx > 50, avdHigh = avd > 50;
+    var type = 'SECURE';
+    if (!anxHigh && !avdHigh) type = 'SECURE';
+    else if (anxHigh && !avdHigh) type = 'ANXIOUS';
+    else if (!anxHigh && avdHigh) type = 'AVOIDANT';
+    else type = 'FEARFUL';
+    var strength = Math.abs(anx - 50) + Math.abs(avd - 50);
+    var swing = strength < 25;
+    return {
+      anx:anx, avd:avd, type:type, typeCn: swing ? SWING.name : TYPE_CN[type],
+      strength:strength, band:bandOf(strength), swing:swing,
+      midAnx: (anx >= 45 && anx <= 55),
+      midAvd: (avd >= 45 && avd <= 55),
+      fast: maxSamePos(answers) >= 16,
+      maxSamePos: maxSamePos(answers)
+    };
+  }
+
+  /* ---------------- 四象限小图 ---------------- */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  // 四格：左上 焦虑型 / 右上 混乱型 / 左下 安全型 / 右下 回避型
+  var CELLS = [
+    { type:'ANXIOUS',  x:0,   y:0,   cn:'焦虑型' },
+    { type:'FEARFUL',  x:110, y:0,   cn:'混乱型' },
+    { type:'SECURE',   x:0,   y:110, cn:'安全型' },
+    { type:'AVOIDANT', x:110, y:110, cn:'回避型' }
+  ];
+
+  function drawQuad(j){
+    var svg = document.getElementById('quad');
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    function el(name, attrs, text){
+      var n = document.createElementNS(SVGNS, name);
+      for (var k in attrs) n.setAttribute(k, attrs[k]);
+      if (text !== undefined) n.textContent = text;
+      svg.appendChild(n);
+      return n;
+    }
+
+    // 当前格子浅填充（摇摆区也填它所属的那一格，但不出类型名强调）
+    CELLS.forEach(function(c){
+      var active = !j.swing && c.type === j.type;
+      el('rect', {
+        x:c.x, y:c.y, width:110, height:110,
+        fill: active ? '#E8EEF1' : 'none',
+        stroke:'#E3DED7', 'stroke-width': active ? 1 : 1
+      });
+      el('text', {
+        x:c.x + 55, y:c.y + 58,
+        'text-anchor':'middle', 'font-size':'12',
+        fill: active ? '#3E5C6B' : '#939CA1',
+        'font-weight': active ? 700 : 400
+      }, c.cn);
+    });
+
+    // 中线十字虚线
+    el('line', { x1:110, y1:0, x2:110, y2:220, stroke:'#E3DED7', 'stroke-width':1, 'stroke-dasharray':'3 3' });
+    el('line', { x1:0, y1:110, x2:220, y2:110, stroke:'#E3DED7', 'stroke-width':1, 'stroke-dasharray':'3 3' });
+
+    // 外框
+    el('rect', { x:0.5, y:0.5, width:219, height:219, fill:'none', stroke:'#D8D2CA', 'stroke-width':1 });
+
+    // 点：x = avd%，y = 100 - anx%
+    // 内缩 12px：极端分（0 或 100）时圆点和外圈光环不会被方框边缘切掉
+    var cx = Math.max(12, Math.min(208, j.avd / 100 * 220));
+    var cy = Math.max(12, Math.min(208, (100 - j.anx) / 100 * 220));
+    el('circle', { cx:cx, cy:cy, r:5.5, fill:'#3E5C6B' });
+    el('circle', { cx:cx, cy:cy, r:9.5, fill:'none', stroke:'#3E5C6B', 'stroke-width':1, 'stroke-opacity':.35 });
+  }
+
+  /* ---------------- 流程 ---------------- */
+  var answers = [];
+  var cursor = 0;
+
+  var $cover = document.getElementById('screen-cover');
+  var $quiz = document.getElementById('screen-quiz');
+  var $result = document.getElementById('screen-result');
+  var $bar = document.getElementById('bar');
+  var $qcount = document.getElementById('qcount');
+  var $qtext = document.getElementById('qtext');
+  var $opts = document.getElementById('opts');
+  var $anx = document.getElementById('anx-num');
+  var $avd = document.getElementById('avd-num');
+  var $bandline = document.getElementById('bandline');
+  var $typename = document.getElementById('typename');
+  var $typetag = document.getElementById('typetag');
+  var $growsec = document.getElementById('growsec');
+  var $grow = document.getElementById('grow');
+  var $trapbox = document.getElementById('trapbox');
+  var $trap = document.getElementById('trap');
+  var $weeksec = document.getElementById('weeksec');
+  var $week = document.getElementById('week');
+  var $swingsec = document.getElementById('swingsec');
+  var $types4 = document.getElementById('types4');
+  var $swingclose = document.getElementById('swingclose');
+  var $midAnx = document.getElementById('mid-anx');
+  var $midAvd = document.getElementById('mid-avd');
+  var $fast = document.getElementById('fast');
+  var $copy = document.getElementById('btn-copy');
+
+  function show(el){
+    [ $cover, $quiz, $result ].forEach(function(s){ s.classList.toggle('on', s === el); });
+    window.scrollTo(0, 0);
+  }
+
+  function toggle(node, on){
+    node.classList.toggle('hidden', !on);
+  }
+
+  function renderQuestion(){
+    var q = QUESTIONS[cursor];
+    $qcount.textContent = '第 ' + (cursor + 1) + ' / ' + TOTAL_Q + ' 题';
+    $bar.style.width = (cursor / TOTAL_Q * 100) + '%';
+    $qtext.textContent = q.text;
+    $opts.innerHTML = '';
+    q.options.forEach(function(option, index){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt';
+      btn.textContent = option.t;
+      btn.addEventListener('click', function(){
+        btn.classList.add('chosen');
+        answers[cursor] = index;
+        setTimeout(function(){
+          if (cursor + 1 < TOTAL_Q){
+            cursor += 1;
+            renderQuestion();
+          } else {
+            $bar.style.width = '100%';
+            renderResult();
+          }
+        }, 130);
+      });
+      $opts.appendChild(btn);
+    });
+  }
+
+  function renderResult(){
+    var j = judge(answers);
+
+    $anx.textContent = String(j.anx);
+    $avd.textContent = String(j.avd);
+    $bandline.textContent = j.band.line;
+    drawQuad(j);
+
+    if (j.swing){
+      $typename.textContent = SWING.name;
+      $typetag.textContent = SWING.tag;
+      $grow.textContent = SWING.body;
+      toggle($growsec, true);
+      toggle($trapbox, false);
+      toggle($weeksec, false);
+      $types4.innerHTML = '';
+      TYPES.forEach(function(t){
+        var li = document.createElement('li');
+        var b = document.createElement('b');
+        b.textContent = TYPE_CN[t];
+        li.appendChild(b);
+        li.appendChild(document.createTextNode(' · ' + CONTENT[t].tag));
+        $types4.appendChild(li);
+      });
+      $swingclose.textContent = SWING.close;
+      toggle($swingsec, true);
+    } else {
+      var c = CONTENT[j.type];
+      $typename.textContent = TYPE_CN[j.type];
+      $typetag.textContent = c.tag;
+      $grow.textContent = c.grow;
+      toggle($growsec, true);
+      $trap.textContent = c.trap;
+      toggle($trapbox, true);
+      $week.innerHTML = '';
+      var li = document.createElement('li');
+      li.textContent = c.week;
+      $week.appendChild(li);
+      toggle($weeksec, true);
+      toggle($swingsec, false);
+    }
+
+    if (j.midAnx){
+      $midAnx.textContent = '你的『怕被抛下』这条线在中间（' + j.anx + ' 分）——离得很近的两头你都能认。';
+      toggle($midAnx, true);
+    } else { toggle($midAnx, false); }
+
+    if (j.midAvd){
+      $midAvd.textContent = '你的『怕被靠近』这条线在中间（' + j.avd + ' 分）——离得很近的两头你都能认。';
+      toggle($midAvd, true);
+    } else { toggle($midAvd, false); }
+
+    if (j.fast){
+      $fast.textContent = '你这 20 题答得很一致——如果刚才是快速点的，可以再测一次，结果会更准。';
+      toggle($fast, true);
+    } else { toggle($fast, false); }
+
+    $copy.textContent = '复制我的结果';
+    $copy.dataset.anx = String(j.anx);
+    $copy.dataset.avd = String(j.avd);
+    $copy.dataset.type = j.typeCn;
+    $copy.dataset.tag = j.swing ? SWING.tag : CONTENT[j.type].tag;
+
+    show($result);
+  }
+
+  function shareText(){
+    return '我的关系默认设置：怕被抛下 ' + $copy.dataset.anx + ' 分，怕被靠近 ' + $copy.dataset.avd + ' 分。\n'
+      + $copy.dataset.type + '——' + $copy.dataset.tag + '\n'
+      + '你也测测：' + location.href;
+  }
+
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function flash(text, revert){
+    $copy.textContent = text;
+    setTimeout(function(){ $copy.textContent = revert; }, 2000);
+  }
+
+  document.getElementById('btn-start').addEventListener('click', function(){
+    answers = [];
+    cursor = 0;
+    show($quiz);
+    renderQuestion();
+  });
+
+  $copy.addEventListener('click', function(){
+    var text = shareText();
+    var done = function(ok){ flash(ok ? '已复制' : '请长按选中复制', '复制我的结果'); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(fallbackCopy(text)); });
+    } else {
+      done(fallbackCopy(text));
+    }
+  });
+
+  document.getElementById('btn-again').addEventListener('click', function(){
+    answers = [];
+    cursor = 0;
+    show($cover);
+  });
+
+  /* 给自测脚本用的钩子 */
+  window.__YIYI__ = {
+    QUESTIONS: QUESTIONS,
+    AXES: AXES,
+    TYPES: TYPES,
+    TYPE_CN: TYPE_CN,
+    BANDS: BANDS,
+    CONTENT: CONTENT,
+    SWING: SWING,
+    TOTAL_Q: TOTAL_Q,
+    scoreOf: scoreOf,
+    maxSamePos: maxSamePos,
+    bandOf: bandOf,
+    judge: judge,
+    answersList: function(){ return answers.slice(); },
+    setAnswers: function(list){ answers = list.slice(); },
+    finish: function(){ renderResult(); },
+    goTo: function(index){ cursor = index; show($quiz); renderQuestion(); },
+    optionCount: function(){ return $opts.children.length; },
+    clickOption: function(index){ $opts.children[index].click(); },
+    dom: function(){
+      var qdot = document.querySelector('#quad circle');
+      return {
+        anx: $anx.textContent,
+        avd: $avd.textContent,
+        typename: $typename.textContent,
+        typetag: $typetag.textContent,
+        bandline: $bandline.textContent,
+        grow: $growsec.classList.contains('hidden') ? null : $grow.textContent,
+        trap: $trapbox.classList.contains('hidden') ? null : $trap.textContent,
+        week: $weeksec.classList.contains('hidden') ? null : Array.prototype.map.call($week.children, function(li){ return li.textContent; }),
+        swing: $swingsec.classList.contains('hidden') ? null : Array.prototype.map.call($types4.children, function(li){ return li.textContent; }),
+        swingclose: $swingsec.classList.contains('hidden') ? null : $swingclose.textContent,
+        midAnx: $midAnx.classList.contains('hidden') ? null : $midAnx.textContent,
+        midAvd: $midAvd.classList.contains('hidden') ? null : $midAvd.textContent,
+        fast: $fast.classList.contains('hidden') ? null : $fast.textContent,
+        foot: Array.prototype.map.call(document.querySelectorAll('.foot p'), function(p){ return p.textContent; }),
+        copyLabel: $copy.textContent,
+        dot: qdot ? { cx: +qdot.getAttribute('cx'), cy: +qdot.getAttribute('cy') } : null,
+        cellLabels: Array.prototype.map.call(document.querySelectorAll('#quad text'), function(t){ return t.textContent; })
+      };
+    },
+    screens: function(){
+      return { cover:$cover.classList.contains('on'), quiz:$quiz.classList.contains('on'), result:$result.classList.contains('on') };
+    }
+  };
+})();
+</script>
+</body>
+</html>
